@@ -8,4 +8,10 @@
     <BaseOutputPath>$(SolutionDir)\$(Configuration)</BaseOutputPath>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Update="mudstep_atomicbeats_old.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

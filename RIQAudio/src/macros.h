@@ -1,1 +1,1 @@
-#define DllExport   __declspec( dllexport )
+#define DllExport __declspec(dllexport)
