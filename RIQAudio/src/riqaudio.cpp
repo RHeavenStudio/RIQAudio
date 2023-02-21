@@ -18,28 +18,13 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio/miniaudio.h"
 
+#include <iostream>
 #include <stdio.h>
 
-__declspec(dllexport) void playTest(const char* filePath)
+extern "C"
 {
-    ma_result result;
-    ma_engine engine;
+    __declspec(dllexport) void init()
+    {
 
-    if (filePath == NULL < 2) {
-        printf("No input file.");
-        return -1;
     }
-
-    result = ma_engine_init(NULL, &engine);
-    if (result != MA_SUCCESS) {
-        printf("Failed to initialize audio engine.");
-        return -1;
-    }
-
-    ma_engine_play_sound(&engine, filePath, NULL);
-
-    printf("Press Enter to quit...");
-    getchar();
-
-    ma_engine_uninit(&engine);
 }

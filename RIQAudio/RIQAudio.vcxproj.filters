@@ -30,9 +30,12 @@
     <ClInclude Include="vendor\miniaudio\external\dr_wav.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\riqaudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\riqaudio.c">
+    <ClCompile Include="src\riqaudio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vendor\miniaudio\external\stb_vorbis.h">
