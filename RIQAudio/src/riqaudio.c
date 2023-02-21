@@ -1,13 +1,17 @@
 #include "macros.h"
 
+#include <stdbool.h>
+
 #include "riqaudio.h"
+
+#define TRACELOG(level, ...) printf(__VA_ARGS__)
 
 #define SUPPORT_FILEFORMAT_OGG
 #define SUPPORT_FILEFORMAT_WAV
 
 #if defined(SUPPORT_FILEFORMAT_OGG)
     #define STB_VORBIS_IMPLEMENTATION
-    #include "miniaudio/external/stb_vorbis.h" // Vorbis decoding
+    #include "miniaudio/extras/stb_vorbis.h" // Vorbis decoding
 #endif
 
 /*#if defined(SUPPORT_FILEFORMAT_WAV)
@@ -22,65 +26,162 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio/miniaudio.h"
 
-void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
+// ================================================================================
+// Types and structures definitions
+// ================================================================================
+
+struct riqAudioBuffer
 {
-    ma_decoder* pDecoder = (ma_decoder*)pDevice->pUserData;
-    if (pDecoder == NULL) {
-        return;
-    }
+    ma_data_converter converter;
 
-    ma_decoder_read_pcm_frames(pDecoder, pOutput, frameCount, NULL);
+    AudioCallback callback;
+    riqAudioProcessor* processor;
 
-    (void)pInput;
-}
+    float volume;
+    float pitch;
+    float pan;
 
-void riq_init(const char* fileLocation)
+    bool playing;
+    bool paused;
+    bool looping;
+    int using;
+
+    riqAudioBuffer* next;
+    riqAudioBuffer* prev;
+};
+
+struct riqAudioProcessor
 {
-    if (fileLocation == NULL)
-    {
-        printf("No input file.");
-        return;
-    }
+    AudioCallback process;
+    riqAudioProcessor* next;
+    riqAudioProcessor* prev;
+};
 
-    result = ma_decoder_init_file(fileLocation, NULL, &decoder);
+typedef struct AudioData
+{
+    struct {
+        ma_context context;         // miniaudio context data.
+        ma_device device;           // miniaudio device.
+        ma_mutex lock;              // miniaudio mutex lock.
+        bool isReady;               // If audio device is ready.
+        size_t pcmBufferSize;       // Pre-allocated buffer size.
+        void* pcmBuffer;            // Pre-allocated buffer to read audio data from file/memory.
+    } System;
+
+    struct {
+        riqAudioBuffer* first;      // Pointer to the first AudioBuffer in the list.
+        riqAudioBuffer* last;       // Pointer to the last AudioBuffer in the list.
+        int defaultSize;            // Default audio buffer size for audio streams.
+    } Buffer;
+
+    struct {
+        unsigned int poolCounter;   // AudioBuffer points to pool counter.
+        riqAudioBuffer* pool[16];
+        unsigned int channels[16];
+    } MultiChannel;
+
+} AudioData;
+
+// ================================================================================
+// 
+// ================================================================================
+
+// Global audio context
+static AudioData AUDIO = 
+{
+    .Buffer.defaultSize = 0
+};
+
+static void OnLog(void* pUserData, ma_uint32 level, const char* pMessage);
+static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const void* pFramesInput, ma_uint32 frameCount);
+
+#define AudioBuffer riqAudioBuffer;
+
+// 
+void RiqInitAudioDevice(void)
+{
+    ma_context_config ctxConfig = ma_context_config_init();
+    ma_log_callback_init(OnLog, NULL);
+
+    ma_result result = ma_context_init(NULL, 0, &ctxConfig, &AUDIO.System.context);
     if (result != MA_SUCCESS)
     {
-        printf("Could not load file: %s\n", fileLocation);
+        TRACELOG(LOG_WARNING, "RIQAudio: Failed to initialize context!");
         return;
     }
 
-    deviceConfig = ma_device_config_init(ma_device_type_playback);
-    deviceConfig.playback.format = decoder.outputFormat;
-    deviceConfig.playback.channels = decoder.outputChannels;
-    deviceConfig.sampleRate = decoder.outputSampleRate;
-    deviceConfig.dataCallback = data_callback;
-    deviceConfig.pUserData = &decoder;
+    // Initialize audio device
+    ma_device_config config = ma_device_config_init(ma_device_type_playback);
+    config.playback.pDeviceID = NULL;
+    config.playback.format = AUDIO_DEVICE_FORMAT;
+    config.playback.channels = AUDIO_DEVICE_CHANNELS;
+    
+    config.capture.pDeviceID = NULL;
+    config.capture.format = ma_format_s16;
+    config.capture.channels = 1;
+    config.sampleRate = AUDIO_DEVICE_SAMPLE_RATE;
 
-    if (ma_device_init(NULL, &deviceConfig, &device) != MA_SUCCESS) {
-        printf("Failed to open playback device.\n");
-        ma_decoder_uninit(&decoder);
+    config.dataCallback = OnSendAudioDataToDevice;
+    config.pUserData = NULL;
+
+    result = ma_device_init(&AUDIO.System.context, &config, &AUDIO.System.device);
+    if (result != MA_SUCCESS)
+    {
+        TRACELOG(LOG_WARNING, "RIQAudio: Failed to initialize playback device!");
         return;
     }
 
-    printf("Initialized!\n");
+    result = ma_device_start(&AUDIO.System.device);
+    if (result != MA_SUCCESS)
+    {
+        TRACELOG(LOG_WARNING, "RIQAudio: Failed to start playback device!");
+        ma_device_uninit(&AUDIO.System.device);
+        ma_context_uninit(&AUDIO.System.context);
+        return;
+    }
+
+    if (ma_mutex_init(&AUDIO.System.lock) != MA_SUCCESS)
+    {
+        TRACELOG(LOG_WARNING, "RIQAudio: Failed to create mutex for mixing!");
+        ma_device_uninit(&AUDIO.System.device);
+        ma_context_uninit(&AUDIO.System.context);
+        return;
+    }
+
+    for (int i = 0; i < 16; i++)
+    {
+        // Get back to this
+        // AUDIO.MultiChannel.pool[i] = LoadAudioBuffer(AUDIO_DEVICE_FORMAT, AUDIO_DEVICE_CHANNELS, AUDIO.System.device.sampleRate, 0, 0);
+    }
+
+    TRACELOG(LOG_INFO, "RIQAudio: Device initialized successfully!");
 }
 
-void riq_play()
+void RiqCloseAudioDevice(void)
 {
-    if (ma_device_start(&device) != MA_SUCCESS) {
-        printf("Failed to start playback device.\n");
-        ma_device_uninit(&device);
-        ma_decoder_uninit(&decoder);
-        return;
-    }
+    if (AUDIO.System.isReady)
+    {
+        ma_mutex_uninit(&AUDIO.System.lock);
+        ma_device_uninit(&AUDIO.System.device);
+        ma_context_uninit(&AUDIO.System.context);
 
-    printf("Playing!\n");
+        AUDIO.System.isReady = false;
+
+        free(AUDIO.System.pcmBuffer);
+
+        TRACELOG(LOG_INFO, "RIQAudio: Device closed successfully!");
+    }
+    else TRACELOG(LOG_WARNING, "RIQAudio: Device could not be closed, not currently initialized!");
 }
 
-void riq_dispose(AudioStream* stream)
+static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const void* pFramesInput, ma_uint32 frameCount)
 {
-    ma_device_uninit(&device);
-    ma_decoder_uninit(&decoder);
+    (void)pDevice;
+}
 
-    printf("Deinitialized!\n");
+// Should find out a way to link this directly to Unity's logging system
+static void OnLog(void* pUserData, ma_uint32 level, const char* pMessage)
+{
+    // NOTE: All log messages from miniaudio are errors.
+    TRACELOG(LOG_WARNING, "miniaudio: %s", pMessage);
 }
