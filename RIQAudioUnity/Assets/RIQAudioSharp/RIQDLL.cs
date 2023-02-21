@@ -5,7 +5,7 @@ namespace RIQAudio
 {
     public static class RIQDLL
     {
-        public const string nativeLibName = "RIQAudio.dll";
+        public const string nativeLibName = "RIQAudio";
 
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern AudioStream riq_init(string fileLocation);
