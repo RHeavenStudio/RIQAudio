@@ -1,3 +1,7 @@
+#include "macros.h"
+
+#include "riqaudio.h"
+
 #define SUPPORT_FILEFORMAT_OGG
 #define SUPPORT_FILEFORMAT_WAV
 
@@ -18,13 +22,16 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio/miniaudio.h"
 
-#include <iostream>
-#include <stdio.h>
-
-extern "C"
+DllExport AudioStream riq_init()
 {
-    __declspec(dllexport) void init()
-    {
+    printf("Struct initialized!");
+}
 
-    }
+DllExport ma_result riq_dispose()
+{
+    /*ma_device_uninit(device);
+    ma_context_uninit(context);
+
+    free(device);
+    free(context);*/
 }
