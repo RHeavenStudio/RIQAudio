@@ -1,18 +1,17 @@
+#define STB_VORBIS_IMPLEMENTATION
+#include "miniaudio/stb_vorbis.h" // Vorbis decoding
+
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio/miniaudio.h"
 
-#include <iostream>
 #include <stdio.h>
-#include <string.h>
 
-int main()
+int main(int argc, char** argv)
 {
     ma_result result;
     ma_engine engine;
 
-    std::string fileLoc = "C:/Users/Braedon/Music/Title Theme Finished.wav";
-
-    if (fileLoc.length() < 2) {
+    if (argc < 2) {
         printf("No input file.");
         return -1;
     }
@@ -23,7 +22,7 @@ int main()
         return -1;
     }
 
-    ma_engine_play_sound(&engine, fileLoc.c_str(), NULL);
+    ma_engine_play_sound(&engine, argv[1], NULL);
 
     printf("Press Enter to quit...");
     getchar();
