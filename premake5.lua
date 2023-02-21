@@ -1,12 +1,12 @@
 workspace "RIQAudio"
     
-    Configurations
+    configurations
     {
         "Debug",
         "Release"
     }
 
-outputdir = "%{cfg.buildcfg}-${cfg.system}-%{cfg.architecture}";
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "RIQAudio"
     location "RIQAudio"
@@ -22,12 +22,12 @@ project "RIQAudio"
         "%{prj.name}/src/**.c",
     }
 
-    include 
+    includedirs
     {
-        "%{prj.name}/vendor"
+        "%{prj.name}/vendor/miniaudio/"
     }
 
-    cdialect "C17"
+    cdialect "Default"
     staticruntime "On"
 
     defines
@@ -43,5 +43,5 @@ project "RIQAudio"
     filter "configurations:Debug"
         symbols "On"
 
-    filter "configuration:Release"
+    filter "configurations:Release"
         optimize "On"
