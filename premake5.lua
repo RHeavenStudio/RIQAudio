@@ -1,5 +1,6 @@
 workspace "RIQAudio"
-    
+    architecture "x86_64"
+
     configurations
     {
         "Debug",
@@ -13,7 +14,10 @@ project "RIQAudio"
     kind "SharedLib"
     language "C"
 
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    cdialect "Default"
+    staticruntime "On"
+
+    targetdir ("RIQAudioUnity/Assets/RIQAudioSharp/bin")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     files
@@ -24,20 +28,13 @@ project "RIQAudio"
 
     includedirs
     {
-        "%{prj.name}/vendor/miniaudio/"
+        "%{prj.name}/src",
+        "%{prj.name}/vendor"
     }
-
-    cdialect "Default"
-    staticruntime "On"
 
     defines
     {
         "_CRT_SECURE_NO_WARNINGS"
-    }
-
-    postbuildcommands
-    {
-        ("{COPY} %{cfg.buildtarget.relpath} ../RIQAudioUnity/Assets/RIQAudioSharp/bin")
     }
 
     filter "configurations:Debug"
