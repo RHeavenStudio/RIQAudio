@@ -154,7 +154,14 @@ void RiqInitAudioDevice(void)
         // AUDIO.MultiChannel.pool[i] = LoadAudioBuffer(AUDIO_DEVICE_FORMAT, AUDIO_DEVICE_CHANNELS, AUDIO.System.device.sampleRate, 0, 0);
     }
 
+    AUDIO.System.isReady = true;
+
     TRACELOG(LOG_INFO, "RIQAudio: Device initialized successfully!");
+}
+
+bool IsRiqReady()
+{
+    return AUDIO.System.isReady;
 }
 
 void RiqCloseAudioDevice(void)

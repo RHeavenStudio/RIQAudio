@@ -5,21 +5,25 @@ namespace RIQAudio.Unity
     public class RIQAudioSource : MonoBehaviour
     {
         AudioStream stream;
+        public string testFileLoc;
 
         private void Start()
         {
-            stream = RIQDLL.riq_init(Application.streamingAssetsPath + "/mudstep_atomicbeats_old.wav");
+            testFileLoc = Application.streamingAssetsPath + "/mudstep_atomicbeats_old.wav";
+
+            RIQDLL.RiqInitAudioDevice();
+
+            // Should return true if RiqInitAudioDevice worked.
+            Debug.Log(RIQDLL.IsRiqReady());
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-                RIQDLL.riq_play();
         }
 
         private void OnDestroy()
         {
-            RIQDLL.riq_dispose(stream);
+            RIQDLL.RiqCloseAudioDevice();
         }
     }
 }

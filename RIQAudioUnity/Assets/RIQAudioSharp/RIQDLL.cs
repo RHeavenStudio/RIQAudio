@@ -8,13 +8,12 @@ namespace RIQAudio
         public const string nativeLibName = "RIQAudio";
 
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern AudioStream riq_init(string fileLocation);
+        public static extern void RiqInitAudioDevice();
 
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void riq_play();
-
+        public static extern void RiqCloseAudioDevice();
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void riq_dispose(AudioStream stream);
+        public static extern bool IsRiqReady();
     }
 
     [StructLayout(LayoutKind.Sequential)]

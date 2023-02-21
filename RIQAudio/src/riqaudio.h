@@ -67,9 +67,9 @@ typedef struct AudioStream
 extern "C" {
 #endif
 
-DllExport void riq_init(const char* fileLocation);
-DllExport void riq_play();
-DllExport void riq_dispose(AudioStream* stream);
+DllExport void RiqInitAudioDevice(void);
+DllExport void RiqCloseAudioDevice(void);
+DllExport bool IsRiqReady();
 
 #ifdef __cplusplus
 }
