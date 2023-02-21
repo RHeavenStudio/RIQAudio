@@ -1,14 +1,9 @@
-﻿using System.Runtime.InteropServices;
+using System;
+using System.Runtime.InteropServices;
 
-namespace RIQAudioSharp
+namespace RIQAudio
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public partial struct AudioStream
-    {
-        public IntPtr buffer;
-    }
-
-    internal class Program
+    public static class RIQDLL
     {
         public const string nativeLibName = "RIQAudio.dll";
 
@@ -20,17 +15,11 @@ namespace RIQAudioSharp
 
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void riq_dispose(AudioStream stream);
+    }
 
-
-        static void Main(string[] args)
-        {
-            string streamURI = @"mudstep_atomicbeats_old.wav";
-            var stream = riq_init(streamURI);
-
-            riq_play();
-            Console.ReadLine();
-
-            riq_dispose(stream);
-        }
+    [StructLayout(LayoutKind.Sequential)]
+    public partial struct AudioStream
+    {
+        public IntPtr buffer;
     }
 }

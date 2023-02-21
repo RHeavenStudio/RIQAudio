@@ -72,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
-    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
+    <OutDir>../RIQAudioUnity/Assets/RIQAudioSharp/Lib/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
-    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
+    <OutDir>../RIQAudioUnity/Assets/RIQAudioSharp/Lib/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
-    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
+    <OutDir>../RIQAudioUnity/Assets/RIQAudioSharp/Lib/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
-    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
+    <OutDir>../RIQAudioUnity/Assets/RIQAudioSharp/Lib/</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
