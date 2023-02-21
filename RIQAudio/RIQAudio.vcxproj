@@ -27,26 +27,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -72,15 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
+    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
+    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
+    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(ProjectDir)vendor;$(ProjectDir)src;$(LibraryPath)</LibraryPath>
+    <OutDir>../$(Configuration)/$(Configuration)/net6.0/</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,13 +160,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="vendor\miniaudio\external\dr_wav.h" />
     <ClInclude Include="vendor\miniaudio\miniaudio.h" />
-    <ClInclude Include="vendor\miniaudio\miniaudio_libopus.h" />
-    <ClInclude Include="vendor\miniaudio\miniaudio_libvorbis.h" />
+    <ClInclude Include="vendor\miniaudio\external\miniaudio_libopus.h" />
+    <ClInclude Include="vendor\miniaudio\external\miniaudio_libvorbis.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\riqaudio\riqaudio.c" />
-    <ClCompile Include="vendor\miniaudio\stb_vorbis.h" />
+    <ClCompile Include="src\riqaudio.c" />
+    <ClCompile Include="vendor\miniaudio\external\stb_vorbis.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

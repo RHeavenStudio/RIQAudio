@@ -21,18 +21,21 @@
     <ClInclude Include="src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\miniaudio\miniaudio_libopus.h">
+    <ClInclude Include="vendor\miniaudio\external\miniaudio_libopus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vendor\miniaudio\miniaudio_libvorbis.h">
+    <ClInclude Include="vendor\miniaudio\external\miniaudio_libvorbis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\miniaudio\external\dr_wav.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\riqaudio\riqaudio.c">
+    <ClCompile Include="src\riqaudio.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vendor\miniaudio\stb_vorbis.h">
+    <ClCompile Include="vendor\miniaudio\external\stb_vorbis.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
