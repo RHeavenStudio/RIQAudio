@@ -61,7 +61,6 @@ pub struct AudioData<'a> {
     pub multi_channel: AudioMultiChannel<'a>,
 }
 
-// mut
 static AUDIO: Mutex<Option<AudioData>> = Mutex::new(None);
 
 #[no_mangle]
