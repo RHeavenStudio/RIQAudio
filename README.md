@@ -10,9 +10,9 @@ A custom Unity audio middleware based on miniaudio.
   - Open the folder in a console, and type `cargo build`.
 
 ## Credits
-Developed by ["Starpelly"](https://github.com/Starpelly) and ["xhayper"](https://github.com/xhayper)
+Developed by ["Starpelly"](https://github.com/Starpelly) and ["xhayper"](https://github.com/xhayper).
 
-Based on [miniaudio](http://miniaud.io/)
+Based on [miniaudio](http://miniaud.io/), with [Rust bindings by "ExPixel"](https://github.com/ExPixel/miniaudio-rs).
 
 ## License
 RIQAudio is licensed under the MIT Public License, see [LICENSE](LICENSE) for more information.
