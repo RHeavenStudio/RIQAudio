@@ -6,6 +6,6 @@
 
 extern "C" {
 
-void rig_init_audio_device();
+void riq_init_audio_device();
 
 } // extern "C"

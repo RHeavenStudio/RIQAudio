@@ -1,7 +1,24 @@
-use miniaudio::{Device, DeviceConfig, DeviceType};
+use miniaudio::{DataConverter, Device, DeviceConfig, DeviceType};
+
+pub struct RiqAudioBuffer {
+    pub converter: DataConverter,
+    // pub processor: &RiqAudioProcessor;
+    pub volume: f32,
+    pub pitch: f32,
+    pub pan: f32,
+
+    pub playing: bool,
+    pub paused: bool,
+    pub looping: bool,
+
+    pub using: i32,
+
+    pub next: Box<RiqAudioBuffer>,
+    pub prev: Box<RiqAudioBuffer>,
+}
 
 #[no_mangle]
-pub extern fn rig_init_audio_device() {
+pub extern "C" fn riq_init_audio_device() {
     let mut config = DeviceConfig::new(DeviceType::Playback);
     config.playback_mut().set_format(miniaudio::Format::F32);
     config.playback_mut().set_channels(2);
