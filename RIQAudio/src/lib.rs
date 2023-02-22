@@ -1,4 +1,5 @@
 use miniaudio::{Context, DataConverter, Device, DeviceConfig, DeviceType, Format};
+use std::sync::Mutex;
 
 pub struct AudioStream<'a> {
     /*
@@ -61,7 +62,7 @@ pub struct AudioData<'a> {
 }
 
 // mut
-pub static mut AUDIO: Option<AudioData> = None;
+static AUDIO: Mutex<Option<AudioData>> = Mutex::new(None);
 
 #[no_mangle]
 pub extern "C" fn riq_init_audio_device() {
@@ -77,48 +78,37 @@ pub extern "C" fn riq_init_audio_device() {
 
     let device = Device::new(None, &config).expect("failed to open playback device");
 
-    // why am i so bad at rust
-    unsafe {
-        AUDIO = Some(AudioData {
-            system: AudioSystem {
-                device,
-                is_ready: true,
-                pcm_buffer_size: 0,
-                pcm_buffer: Vec::new(),
-            },
-            buffer: AudioBuffer {
-                first: None,
-                last: None,
-                default_size: 0,
-            },
-            multi_channel: AudioMultiChannel {
-                pool_counter: 0,
-                pool: Vec::new(),
-                channels: Vec::new(),
-            },
-        });
-    }
+    AUDIO.lock().unwrap().replace(AudioData {
+        system: AudioSystem {
+            device,
+            is_ready: true,
+            pcm_buffer_size: 0,
+            pcm_buffer: Vec::new(),
+        },
+        buffer: AudioBuffer {
+            first: None,
+            last: None,
+            default_size: 0,
+        },
+        multi_channel: AudioMultiChannel {
+            pool_counter: 0,
+            pool: Vec::new(),
+            channels: Vec::new(),
+        },
+    });
 }
 
 #[no_mangle]
 pub extern "C" fn riq_is_ready() -> bool {
-    // why am i so bad at rust
-    unsafe {
-        if let Some(audio) = &mut AUDIO {
-            return audio.system.is_ready;
-        }
-    }
-
-    false
+    AUDIO.lock().unwrap().as_ref().unwrap().system.is_ready
 }
 
 #[no_mangle]
 pub extern "C" fn riq_close_audio_device() {
-    // why am i so bad at rust
-    unsafe {
-        if let Some(audio) = &mut AUDIO {
-            audio.system.device.stop().unwrap();
-            audio.system.pcm_buffer.clear();
-        }
+    let mut audio_data = AUDIO.lock().unwrap().take();
+
+    if let Some(audio) = &mut audio_data {
+        audio.system.device.stop().unwrap();
+        audio.system.pcm_buffer.clear();
     }
 }
