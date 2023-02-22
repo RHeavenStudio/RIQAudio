@@ -1,5 +1,8 @@
-use miniaudio::{Context, DataConverter, Device, DeviceConfig, DeviceType, Format};
+use miniaudio::{Context, DataConverter, Device, Decoder, DeviceConfig, DeviceType, Format};
 use std::sync::Mutex;
+
+use libc::c_char;
+use std::ffi::CStr;
 
 pub struct AudioStream<'a> {
     /*
@@ -64,7 +67,17 @@ pub struct AudioData<'a> {
 static AUDIO: Mutex<Option<AudioData>> = Mutex::new(None);
 
 #[no_mangle]
-pub extern "C" fn riq_init_audio_device() {
+pub extern "C" fn riq_init_audio_device(file: *const c_char) {
+
+    let c_str = unsafe {
+        assert!(file.is_null());
+
+        CStr::from_ptr(file)
+    };
+
+    let file_loc = c_str.to_str().unwrap();
+    let mut decoder = Decoder::from_file(file_loc, None).expect("Failed to initialize decoder from file!");    
+
     let mut config = DeviceConfig::new(DeviceType::Playback);
     config.playback_mut().set_device_id(None);
     config.playback_mut().set_format(Format::F32);
@@ -75,7 +88,13 @@ pub extern "C" fn riq_init_audio_device() {
     config.capture_mut().set_channels(1);
     config.set_sample_rate(0);
 
-    let device = Device::new(None, &config).expect("failed to open playback device");
+    let mut device = Device::new(None, &config).expect("failed to open playback device");
+
+    device.set_data_callback(move |_device, output, _frames| {
+        decoder.read_pcm_frames(output);
+    });
+
+    device.start().expect("Failed to start device!");
 
     AUDIO.lock().unwrap().replace(AudioData {
         system: AudioSystem {

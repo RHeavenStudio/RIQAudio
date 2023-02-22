@@ -11,3 +11,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 miniaudio = { version = "0.10.0", features = ["ma-enable-vorbis"] }
+libc = "0.2"
