@@ -100,7 +100,13 @@ pub extern "C" fn riq_init_audio_device() {
 
 #[no_mangle]
 pub extern "C" fn riq_is_ready() -> bool {
-    AUDIO.lock().unwrap().as_ref().unwrap().system.is_ready
+    let audio_data = AUDIO.lock().unwrap().take();
+
+    if audio_data.is_some() {
+        return audio_data.unwrap().system.is_ready;
+    }
+
+    false
 }
 
 #[no_mangle]
