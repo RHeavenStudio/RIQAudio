@@ -67,16 +67,14 @@ pub struct AudioData<'a> {
 static AUDIO: Mutex<Option<AudioData>> = Mutex::new(None);
 
 #[no_mangle]
-pub extern "C" fn riq_init_audio_device(file: *const c_char) {
-
+pub extern "C" fn riq_init_audio_device(file: *const c_char) {   
     let c_str = unsafe {
-        assert!(file.is_null());
-
         CStr::from_ptr(file)
     };
-
-    let file_loc = c_str.to_str().unwrap();
-    let mut decoder = Decoder::from_file(file_loc, None).expect("Failed to initialize decoder from file!");    
+    
+    let file_path = c_str.to_str().unwrap();
+    println!("{}", file_path.to_string());
+    let mut decoder = Decoder::from_file(file_path.to_string(), None).unwrap();
 
     let mut config = DeviceConfig::new(DeviceType::Playback);
     config.playback_mut().set_device_id(None);
@@ -135,4 +133,6 @@ pub extern "C" fn riq_close_audio_device() {
         audio.system.device.stop().unwrap();
         audio.system.pcm_buffer.clear();
     }
+
+    println!("Closed audio device!");
 }
