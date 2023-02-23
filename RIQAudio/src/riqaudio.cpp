@@ -44,7 +44,7 @@ struct riqAudioBuffer
     bool playing;
     bool paused;
     bool looping;
-    int using;
+    // int using;
 
     riqAudioBuffer* next;
     riqAudioBuffer* prev;
@@ -89,7 +89,6 @@ typedef struct AudioData
 // Global audio context
 static AudioData AUDIO = 
 {
-    .Buffer.defaultSize = 0
 };
 
 static void OnLog(void* pUserData, ma_uint32 level, const char* pMessage);

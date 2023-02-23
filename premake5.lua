@@ -12,9 +12,9 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 project "RIQAudio"
     location "RIQAudio"
     kind "SharedLib"
-    language "C"
+    language "C++"
 
-    cdialect "Default"
+    cppdialect "Default"
     staticruntime "On"
 
     targetdir ("RIQAudioUnity/Assets/RIQAudioSharp/bin")
