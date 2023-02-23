@@ -53,16 +53,36 @@ typedef enum
 //
 // ================================================================================
 
+struct RIQAudioBuffer
+{
+    ma_data_converter converter;
+
+    float volume;
+    float pitch;
+    float pan;
+
+    bool playing;
+    bool paused;
+    bool looping;
+
+    RIQAudioBuffer* next;
+    RIQAudioBuffer* prev;
+};
+
 DllExport class RIQAudio
 {
 private:
     ma_context context;
     ma_device device;
     ma_engine engine;
+    ma_mutex lock;
     bool isReady;
     size_t pcmBufferSize;
+    void* pcmBuffer;
 
-
+    RIQAudioBuffer* firstBuffer;
+    RIQAudioBuffer* lastBuffer;
+    int defaultBufferSize;
 public:
     RIQAudio();
     ~RIQAudio();

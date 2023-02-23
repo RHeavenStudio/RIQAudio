@@ -30,17 +30,16 @@ static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const 
 
 #define AudioBuffer riqAudioBuffer;
 
-// 
 ma_result RIQAudio::Init(void)
 {
     ma_context_config ctxConfig = ma_context_config_init();
     ma_log_callback_init(OnLog, NULL);
 
-    ma_result result = ma_context_init(NULL, 0, &ctxConfig, &AUDIO.System.context);
+    ma_result result = ma_context_init(NULL, 0, &ctxConfig, &context);
     if (result != MA_SUCCESS)
     {
         TRACELOG(LOG_WARNING, "RIQAudio: Failed to initialize context!");
-        return;
+        return MA_ERROR;
     }
 
     // Initialize audio device
@@ -57,28 +56,28 @@ ma_result RIQAudio::Init(void)
     config.dataCallback = OnSendAudioDataToDevice;
     config.pUserData = NULL;
 
-    result = ma_device_init(&AUDIO.System.context, &config, &AUDIO.System.device);
+    result = ma_device_init(&context, &config, &device);
     if (result != MA_SUCCESS)
     {
         TRACELOG(LOG_WARNING, "RIQAudio: Failed to initialize playback device!");
-        return;
+        return MA_ERROR;
     }
 
-    result = ma_device_start(&AUDIO.System.device);
+    result = ma_device_start(&device);
     if (result != MA_SUCCESS)
     {
         TRACELOG(LOG_WARNING, "RIQAudio: Failed to start playback device!");
-        ma_device_uninit(&AUDIO.System.device);
-        ma_context_uninit(&AUDIO.System.context);
-        return;
+        ma_device_uninit(&device);
+        ma_context_uninit(&context);
+        return MA_ERROR;
     }
 
-    if (ma_mutex_init(&AUDIO.System.lock) != MA_SUCCESS)
+    if (ma_mutex_init(&lock) != MA_SUCCESS)
     {
         TRACELOG(LOG_WARNING, "RIQAudio: Failed to create mutex for mixing!");
-        ma_device_uninit(&AUDIO.System.device);
-        ma_context_uninit(&AUDIO.System.context);
-        return;
+        ma_device_uninit(&device);
+        ma_context_uninit(&context);
+        return MA_ERROR;
     }
 
     for (int i = 0; i < 16; i++)
@@ -87,22 +86,24 @@ ma_result RIQAudio::Init(void)
         // AUDIO.MultiChannel.pool[i] = LoadAudioBuffer(AUDIO_DEVICE_FORMAT, AUDIO_DEVICE_CHANNELS, AUDIO.System.device.sampleRate, 0, 0);
     }
 
-    AUDIO.System.isReady = true;
+    isReady = true;
 
     TRACELOG(LOG_INFO, "RIQAudio: Device initialized successfully!");
+
+    return MA_SUCCESS;
 }
 
 RIQAudio::~RIQAudio(void)
 {
     if (isReady)
     {
-        ma_mutex_uninit(&AUDIO.System.lock);
-        ma_device_uninit(&AUDIO.System.device);
-        ma_context_uninit(&AUDIO.System.context);
+        ma_mutex_uninit(&lock);
+        ma_device_uninit(&device);
+        ma_context_uninit(&context);
 
-        AUDIO.System.isReady = false;
+        isReady = false;
 
-        free(AUDIO.System.pcmBuffer);
+        free(pcmBuffer);
 
         TRACELOG(LOG_INFO, "RIQAudio: Device closed successfully!");
     }
