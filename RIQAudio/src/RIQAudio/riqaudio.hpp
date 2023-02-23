@@ -69,7 +69,7 @@ struct RIQAudioBuffer
     RIQAudioBuffer* prev;
 };
 
-DllExport class RIQAudio
+DLLExport class RIQAudio
 {
 private:
     ma_context context;
@@ -86,5 +86,6 @@ private:
 public:
     RIQAudio();
     ~RIQAudio();
+    bool IsReady();
     ma_result Init();
 };

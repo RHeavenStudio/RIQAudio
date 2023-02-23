@@ -1,7 +1,7 @@
 #if defined(_MSC_VER)
-#define DllExport __declspec(dllexport)
+#define DLLExport extern "C" __declspec(dllexport)
 #elif defined(__GNUC__)
-#define DllExport __attribute__((visibility("default")))
+#define DLLExport extern "C" __attribute__((visibility("default")))
 #else
-#define DllExport
+#define DLLExport extern "C"
 #endif

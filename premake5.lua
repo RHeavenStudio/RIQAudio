@@ -17,7 +17,7 @@ project "RIQAudio"
     cppdialect "Default"
     staticruntime "On"
 
-    targetdir ("RIQAudioUnity/Assets/RIQAudioSharp/bin")
+    targetdir ("RIQAudioTest/")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     files
@@ -44,3 +44,14 @@ project "RIQAudio"
 
     filter "configurations:Release"
         optimize "On"
+
+project "RIQAudioTest"
+    location "RIQAudioTest"
+    kind "ConsoleApp"
+    language "C#"
+
+    files
+    {
+        "%{prj.name}/src/**.cs",
+        "%{prj.name}/**.dll"
+    }

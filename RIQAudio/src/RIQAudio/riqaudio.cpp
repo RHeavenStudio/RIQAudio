@@ -30,6 +30,11 @@ static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const 
 
 #define AudioBuffer riqAudioBuffer;
 
+RIQAudio::RIQAudio()
+{
+    Init();
+}
+
 ma_result RIQAudio::Init(void)
 {
     ma_context_config ctxConfig = ma_context_config_init();
@@ -91,6 +96,11 @@ ma_result RIQAudio::Init(void)
     TRACELOG(LOG_INFO, "RIQAudio: Device initialized successfully!");
 
     return MA_SUCCESS;
+}
+
+bool RIQAudio::IsReady()
+{
+    return isReady;
 }
 
 RIQAudio::~RIQAudio(void)
