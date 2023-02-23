@@ -406,6 +406,6 @@ bin-int/
 *.vcxproj.filters
 *.vcxproj.user
 
-*RIQAudioTest/*.dll
-*RIQAudioTest/*.exp
-*RIQAudioTest/*.lib
+RIQAudioTest/*.dll
+RIQAudioTest/*.exp
+RIQAudioTest/*.lib
