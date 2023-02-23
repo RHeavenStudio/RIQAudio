@@ -17,6 +17,9 @@ project "RIQAudio"
     cppdialect "Default"
     staticruntime "On"
 
+    pchheader "riqpch.h"
+    pchsource "%{prj.name}/src/riqpch.cpp"
+
     targetdir ("RIQAudioTest/")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -30,6 +33,7 @@ project "RIQAudio"
 
     includedirs
     {
+        "%{prj.name}/src",
         "%{prj.name}/src/**",
         "%{prj.name}/vendor"
     }

@@ -1,6 +1,6 @@
-#include <stdbool.h>
+#include "riqpch.h"
 
-#include "riqaudio.hpp"
+#include "RIQAudioDevice.hpp"
 
 #define TRACELOG(level, ...) printf(__VA_ARGS__)
 
@@ -30,12 +30,12 @@ static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const 
 
 #define AudioBuffer riqAudioBuffer;
 
-RIQAudio::RIQAudio()
+RIQAudioDevice::RIQAudioDevice()
 {
     Init();
 }
 
-ma_result RIQAudio::Init(void)
+ma_result RIQAudioDevice::Init(void)
 {
     ma_context_config ctxConfig = ma_context_config_init();
     ma_log_callback_init(OnLog, NULL);
@@ -87,7 +87,7 @@ ma_result RIQAudio::Init(void)
 
     for (int i = 0; i < 16; i++)
     {
-        // Get back to this
+        // NOTE: Get back to this.
         // AUDIO.MultiChannel.pool[i] = LoadAudioBuffer(AUDIO_DEVICE_FORMAT, AUDIO_DEVICE_CHANNELS, AUDIO.System.device.sampleRate, 0, 0);
     }
 
@@ -98,12 +98,7 @@ ma_result RIQAudio::Init(void)
     return MA_SUCCESS;
 }
 
-bool RIQAudio::IsReady()
-{
-    return isReady;
-}
-
-RIQAudio::~RIQAudio(void)
+RIQAudioDevice::~RIQAudioDevice(void)
 {
     if (isReady)
     {
@@ -120,12 +115,22 @@ RIQAudio::~RIQAudio(void)
     else TRACELOG(LOG_WARNING, "RIQAudio: Device could not be closed, not currently initialized!");
 }
 
+void RIQAudioDevice::Play()
+{
+
+}
+
+bool RIQAudioDevice::IsReady()
+{
+    return isReady;
+}
+
 static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const void* pFramesInput, ma_uint32 frameCount)
 {
     (void)pDevice;
 }
 
-// Should find out a way to link this directly to Unity's logging system
+// Should find out a way to link this directly to Unity's logging system.
 static void OnLog(void* pUserData, ma_uint32 level, const char* pMessage)
 {
     // NOTE: All log messages from miniaudio are errors.

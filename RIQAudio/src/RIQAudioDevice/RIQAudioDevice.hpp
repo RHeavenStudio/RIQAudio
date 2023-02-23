@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../macros.hpp"
+#include "RIQAudio.hpp"
 #include "miniaudio/miniaudio.h"
 
 // ================================================================================
@@ -26,8 +26,6 @@
 // Types and structures definitions
 // ================================================================================
 
-// Enums
-
 typedef enum
 {
     MUSIC_AUDIO_NONE = 0,
@@ -49,10 +47,6 @@ typedef enum
     LOG_NONE
 } TraceLogLevel;
 
-// ================================================================================
-//
-// ================================================================================
-
 struct RIQAudioBuffer
 {
     ma_data_converter converter;
@@ -69,7 +63,12 @@ struct RIQAudioBuffer
     RIQAudioBuffer* prev;
 };
 
-DLLExport class RIQAudio
+// ================================================================================
+//
+// ================================================================================
+
+
+DLLExport class RIQAudioDevice
 {
 private:
     ma_context_config ctxConfig;
@@ -85,8 +84,10 @@ private:
     RIQAudioBuffer* lastBuffer;
     int defaultBufferSize;
 public:
-    RIQAudio();
-    ~RIQAudio();
+    RIQAudioDevice();
+    ~RIQAudioDevice();
     bool IsReady();
     ma_result Init();
+
+    void Play();
 };

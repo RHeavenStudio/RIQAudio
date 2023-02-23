@@ -7,8 +7,11 @@ namespace RIQAudioTest
         public static void Main(string[] args)
         {
             RIQAudio riq = new RIQAudio();
+
             Console.ReadLine();
+
             riq.Dispose();
+
             Console.ReadLine();
         }
     }
