@@ -113,7 +113,7 @@ RIQAudio::~RIQAudio(void)
 
         isReady = false;
 
-        free(pcmBuffer);
+        // free(pcmBuffer);
 
         TRACELOG(LOG_INFO, "RIQAudio: Device closed successfully!");
     }

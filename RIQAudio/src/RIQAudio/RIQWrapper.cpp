@@ -1,14 +1,14 @@
 #include "../macros.hpp"
 #include "riqaudio.hpp"
 
+#include <stdlib.h>
+
 DLLExport RIQAudio* CreateRIQAudio()
 {
 	return new RIQAudio();
 }
 
-DLLExport bool DeleteRIQAudio(RIQAudio* riq)
+DLLExport void DeleteRIQAudio(RIQAudio* riq)
 {
-	if (riq != NULL)
-		delete riq;
-	return riq == nullptr;
+	delete riq;
 }

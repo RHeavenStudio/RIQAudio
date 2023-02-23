@@ -18,14 +18,13 @@ namespace RIQAudioTest
 
     public partial class RIQAudio
     {
-
         [DllImport(RIQDLL.nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr CreateRIQAudio();
 
         [DllImport(RIQDLL.nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        private static extern bool DeleteRIQAudio(IntPtr riq);
+        private static extern void DeleteRIQAudio(IntPtr riq);
 
-        private IntPtr _riqAudioPointer;
+        private readonly IntPtr _riqAudioPointer;
 
         public RIQAudio()
         {

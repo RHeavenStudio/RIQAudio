@@ -72,6 +72,7 @@ struct RIQAudioBuffer
 DLLExport class RIQAudio
 {
 private:
+    ma_context_config ctxConfig;
     ma_context context;
     ma_device device;
     ma_engine engine;
