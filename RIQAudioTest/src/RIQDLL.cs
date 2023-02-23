@@ -16,7 +16,7 @@ namespace RIQAudioTest
         public static extern bool IsRiqReady();
     }
 
-    public partial class RIQAudio
+    public partial class RIQAudio : IDisposable
     {
         [DllImport(RIQDLL.nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr CreateRIQAudio();
@@ -31,7 +31,7 @@ namespace RIQAudioTest
             _riqAudioPointer = CreateRIQAudio();
         }
 
-        ~RIQAudio()
+        public void Dispose()
         {
             DeleteRIQAudio(_riqAudioPointer);
         }

@@ -8,6 +8,8 @@ namespace RIQAudioTest
         {
             RIQAudio riq = new RIQAudio();
             Console.ReadLine();
+            riq.Dispose();
+            Console.ReadLine();
         }
     }
 }
