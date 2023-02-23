@@ -1,8 +1,6 @@
-#include "macros.h"
-
 #include <stdbool.h>
 
-#include "riqaudio.h"
+#include "riqaudio.hpp"
 
 #define TRACELOG(level, ...) printf(__VA_ARGS__)
 
@@ -26,70 +24,6 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio/miniaudio.h"
 
-// ================================================================================
-// Types and structures definitions
-// ================================================================================
-
-struct riqAudioBuffer
-{
-    ma_data_converter converter;
-
-    AudioCallback callback;
-    riqAudioProcessor* processor;
-
-    float volume;
-    float pitch;
-    float pan;
-
-    bool playing;
-    bool paused;
-    bool looping;
-    // int using;
-
-    riqAudioBuffer* next;
-    riqAudioBuffer* prev;
-};
-
-struct riqAudioProcessor
-{
-    AudioCallback process;
-    riqAudioProcessor* next;
-    riqAudioProcessor* prev;
-};
-
-typedef struct AudioData
-{
-    struct {
-        ma_context context;         // miniaudio context data.
-        ma_device device;           // miniaudio device.
-        ma_mutex lock;              // miniaudio mutex lock.
-        bool isReady;               // If audio device is ready.
-        size_t pcmBufferSize;       // Pre-allocated buffer size.
-        void* pcmBuffer;            // Pre-allocated buffer to read audio data from file/memory.
-    } System;
-
-    struct {
-        riqAudioBuffer* first;      // Pointer to the first AudioBuffer in the list.
-        riqAudioBuffer* last;       // Pointer to the last AudioBuffer in the list.
-        int defaultSize;            // Default audio buffer size for audio streams.
-    } Buffer;
-
-    struct {
-        unsigned int poolCounter;   // AudioBuffer points to pool counter.
-        riqAudioBuffer* pool[16];
-        unsigned int channels[16];
-    } MultiChannel;
-
-} AudioData;
-
-// ================================================================================
-// 
-// ================================================================================
-
-// Global audio context
-static AudioData AUDIO = 
-{
-};
 
 static void OnLog(void* pUserData, ma_uint32 level, const char* pMessage);
 static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const void* pFramesInput, ma_uint32 frameCount);
@@ -97,7 +31,7 @@ static void OnSendAudioDataToDevice(ma_device* pDevice, void* pFramesOut, const 
 #define AudioBuffer riqAudioBuffer;
 
 // 
-void RiqInitAudioDevice(void)
+ma_result RIQAudio::Init(void)
 {
     ma_context_config ctxConfig = ma_context_config_init();
     ma_log_callback_init(OnLog, NULL);
@@ -158,14 +92,9 @@ void RiqInitAudioDevice(void)
     TRACELOG(LOG_INFO, "RIQAudio: Device initialized successfully!");
 }
 
-bool IsRiqReady()
+RIQAudio::~RIQAudio(void)
 {
-    return AUDIO.System.isReady;
-}
-
-void RiqCloseAudioDevice(void)
-{
-    if (AUDIO.System.isReady)
+    if (isReady)
     {
         ma_mutex_uninit(&AUDIO.System.lock);
         ma_device_uninit(&AUDIO.System.device);

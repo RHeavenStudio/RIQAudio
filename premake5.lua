@@ -24,11 +24,13 @@ project "RIQAudio"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.c",
+        "%{prj.name}/src/**.hpp",
+        "%{prj.name}/src/**.cpp",
     }
 
     includedirs
     {
-        "%{prj.name}/src",
+        "%{prj.name}/src/**",
         "%{prj.name}/vendor"
     }
 

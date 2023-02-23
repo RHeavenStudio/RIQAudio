@@ -1,3 +1,6 @@
+#pragma once
+
+#include "../macros.hpp"
 #include "miniaudio/miniaudio.h"
 
 // ================================================================================
@@ -50,32 +53,18 @@ typedef enum
 //
 // ================================================================================
 
-ma_result result;
-ma_decoder decoder;
-ma_device_config deviceConfig;
-ma_device device;
-
-typedef struct AudioStream
+DllExport class RIQAudio
 {
-	ma_engine* engine;
-	ma_device* device;
-	ma_context* context;
-	ma_resource_manager* resource_manager;
-} AudioStream;
+private:
+    ma_context context;
+    ma_device device;
+    ma_engine engine;
+    bool isReady;
+    size_t pcmBufferSize;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-DllExport void RiqInitAudioDevice(void);
-DllExport void RiqCloseAudioDevice(void);
-DllExport bool IsRiqReady();
-
-#ifdef __cplusplus
-}
-#endif
-
-typedef void (*AudioCallback)(void* bufferdata, unsigned int frames);
-
-typedef struct riqAudioBuffer riqAudioBuffer;
-typedef struct riqAudioProcessor riqAudioProcessor;
+public:
+    RIQAudio();
+    ~RIQAudio();
+    ma_result Init();
+};
