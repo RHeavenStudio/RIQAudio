@@ -5,15 +5,15 @@ namespace RIQAudio
 {
     public static class RIQDLL
     {
-        public const string nativeLibName = "riqaudio";
+        public const string nativeLibName = "RIQAudio";
 
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void riq_init_audio_device(string file);
+        public static extern void RiqInitAudioDevice();
 
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void riq_close_audio_device();
+        public static extern void RiqCloseAudioDevice();
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool riq_is_ready();
+        public static extern bool IsRiqReady();
     }
 
     [StructLayout(LayoutKind.Sequential)]

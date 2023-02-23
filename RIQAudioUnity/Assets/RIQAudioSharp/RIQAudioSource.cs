@@ -11,10 +11,10 @@ namespace RIQAudio.Unity
         {
             testFileLoc = Application.streamingAssetsPath + "/mudstep_atomicbeats_old.wav";
 
-            RIQDLL.riq_init_audio_device(testFileLoc);
+            RIQDLL.RiqInitAudioDevice();
 
             // Should return true if RiqInitAudioDevice worked.
-            Debug.Log(RIQDLL.riq_is_ready());
+            Debug.Log(RIQDLL.IsRiqReady());
         }
 
         private void Update()
@@ -23,7 +23,7 @@ namespace RIQAudio.Unity
 
         private void OnDestroy()
         {
-            RIQDLL.riq_close_audio_device();
+            RIQDLL.RiqCloseAudioDevice();
         }
     }
 }
