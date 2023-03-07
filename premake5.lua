@@ -53,6 +53,7 @@ project "RIQAudioTest"
     location "RIQAudioTest"
     kind "ConsoleApp"
     language "C#"
+    links { "RIQAudioSharp" }
 
     files
     {
