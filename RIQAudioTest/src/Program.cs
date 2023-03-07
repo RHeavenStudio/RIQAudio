@@ -1,12 +1,14 @@
 ﻿using System;
 
+using RIQAudio.Models;
+
 namespace RIQAudioTest
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            RIQAudio riq = new RIQAudio();
+            RIQAudioDevice riq = new RIQAudioDevice();
 
             Console.ReadLine();
 

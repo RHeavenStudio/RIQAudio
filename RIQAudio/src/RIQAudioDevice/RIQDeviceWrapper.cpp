@@ -4,12 +4,12 @@
 
 #include "RIQAudioDevice.hpp"
 
-DLLExport RIQAudioDevice* CreateRIQAudio()
+DLLExport RIQAudioDevice* CreateRIQAudioDevice()
 {
 	return new RIQAudioDevice();
 }
 
-DLLExport void DeleteRIQAudio(RIQAudioDevice* riq)
+DLLExport void DeleteRIQAudioDevice(RIQAudioDevice* riq)
 {
 	delete riq;
 }

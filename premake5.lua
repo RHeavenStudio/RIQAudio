@@ -59,3 +59,14 @@ project "RIQAudioTest"
         "%{prj.name}/src/**.cs",
         "%{prj.name}/**.dll"
     }
+
+project "RIQAudioSharp"
+    location "RIQAudioSharp"
+    kind "SharedLib"
+    language "C#"
+
+    files
+    {
+        "%{prj.name}/src/**.cs",
+        "%{prj.name}/**.dll"
+    }
